@@ -1,6 +1,6 @@
 import logging
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, CommandHandler, MessageHandler, Filters, ContextTypes
 import requests
 import io
 from PIL import Image
@@ -80,7 +80,7 @@ def main():
 
     # Tambahkan handler
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, generate_image))
+    application.add_handler(MessageHandler(Filters.text & ~Filters.command, generate_image))
     application.add_error_handler(error_handler)
 
     # Jalankan bot dengan polling
