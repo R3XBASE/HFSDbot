@@ -1,0 +1,20 @@
+services:
+   - type: web
+     name: telegram-image-bot
+     env: python
+     buildCommand: "pip install -r requirements.txt"
+     startCommand: "python HFSD.py"
+     envVars:
+       - key: TELEGRAM_TOKEN
+         fromDatabase:
+           name: telegram-token
+           property: token
+       - key: HF_API_KEY
+         fromDatabase:
+           name: hf-api-key
+           property: token
+     regions:
+       - oregon
+     plan: free
+     instanceCount: 1
+     instanceSize: micro
