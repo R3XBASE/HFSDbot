@@ -1,4 +1,4 @@
-const Telegraf = require('telegraf');
+const { Telegraf } = require('telegraf');
 const axios = require('axios');
 const fs = require('fs');
 const { promisify } = require('util');
@@ -15,8 +15,10 @@ console.log = (...args) => {
   process.stdout.write(`[${timestamp}] ${args.join(' ')}\n`);
 };
 
+// Handle perintah /start
 bot.start((ctx) => ctx.reply('Halo! Saya bot pembuat gambar gratis. Kirim deskripsi gambar, misalnya: "A cat in a spaceship". Catatan: Generasi gambar bisa memakan waktu.'));
 
+// Handle pesan teks
 bot.on('text', async (ctx) => {
   const prompt = ctx.message.text;
   await ctx.reply(`Memproses: ${prompt}... Harap tunggu (bisa 10-30 detik).`);
@@ -49,11 +51,18 @@ bot.on('text', async (ctx) => {
       await ctx.reply(`Gagal menghasilkan gambar: ${response.statusText}`);
     }
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     await ctx.reply('Terjadi kesalahan saat menghasilkan gambar. Coba lagi nanti.');
   }
 });
 
-bot.launch();
+// Jalankan bot
+bot.launch().then(() => {
+  console.log('Bot sedang berjalan...');
+}).catch((err) => {
+  console.error('Gagal menjalankan bot:', err.message);
+});
 
-console.log('Bot sedang berjalan...');
+// Handle graceful shutdown
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
